@@ -35,6 +35,7 @@ def req(url: str, **kwargs: Any) -> Response:
 
 
 def get_all(url: str, **kwargs: Any) -> List[Dict[str, Any]]:
+    print(f'Getting URL {url}')
     ret: List[Dict[str, Any]] = []
     resp = req(url, **kwargs)
     ret.extend(resp.json)
@@ -45,11 +46,12 @@ def get_all(url: str, **kwargs: Any) -> List[Dict[str, Any]]:
 
 
 def filter_repos(
+        username: str,
         repos: List[Dict[str, Any]], *,
         forks: bool, private: bool, collaborator: bool, archived: bool,
 ) -> Dict[str, str]:
     return {
-        repo['full_name']: 'git@github.com:{}'.format(repo['full_name'])
+        repo['full_name']: '{}@github.com:{}'.format(username, repo['full_name'])
         for repo in repos
         if (
             (forks or not repo['fork']) and
